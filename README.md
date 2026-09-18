@@ -200,15 +200,3 @@ Open your browser and navigate to: **[http://127.0.0.1:8000](http://127.0.0.1:80
 
 ---
 
-## 🎬 Video Presentation Demonstration Guide
-When recording your CodeAlpha internship submission video, demonstrate the following steps:
-1. Show project structure in VS Code.
-2. Run `python manage.py check` and `python manage.py runserver`.
-3. Open browser at `http://127.0.0.1:8000`.
-4. Demonstrate product browsing, search, category filter, and product detail view.
-5. Add items to cart, refresh page to show persistence.
-6. Register a new user or log in as `testuser`.
-7. Proceed to checkout, fill shipping details, and place an order.
-8. Show Order Confirmation page.
-9. Open "My Orders" to show recorded order in SQLite.
-10. Log in to Django Admin (`/admin`) to show `Order` and `Product` models.
