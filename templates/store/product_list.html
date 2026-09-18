@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Explore Catalog | CodeAlpha Store{% endblock %}
+
+{% block content %}
+
+    {% if not search_query and not selected_category %}
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-tag">Task 1 Internship Project</span>
+                <h1 class="hero-title">Premium Products, Seamless Shopping.</h1>
+                <p class="hero-subtitle">Discover high-quality electronics, fashion, audio gear, and lifestyle products with instant local delivery.</p>
+                <a href="#catalog" class="btn btn-lg btn-primary">Shop Catalog Now &rarr;</a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- CATALOG TOOLBAR -->
+    <div id="catalog" class="catalog-toolbar" style="margin-top: 2rem;">
+        <div class="category-pills">
+            <a href="{% url 'product_list' %}" class="pill {% if not selected_category %}active{% endif %}">All Products</a>
+            {% for cat in categories %}
+                <a href="{% url 'product_list' %}?category={{ cat.slug }}" class="pill {% if selected_category and selected_category.slug == cat.slug %}active{% endif %}">
+                    {{ cat.name }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <form method="GET" action="{% url 'product_list' %}" class="sort-dropdown">
+            {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category.slug }}">{% endif %}
+            {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+            <label for="sort" style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted);">Sort By:</label>
+            <select name="sort" id="sort" class="sort-select" onchange="this.form.submit()">
+                <option value="newest" {% if sort_option == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+                <option value="price_asc" {% if sort_option == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort_option == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="rating" {% if sort_option == 'rating' %}selected{% endif %}>Top Rated</option>
+            </select>
+        </form>
+    </div>
+
+    {% if search_query %}
+        <div style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-muted);">
+            Showing results for "<strong style="color: var(--text-primary);">{{ search_query }}</strong>" ({{ total_products }} products found)
+        </div>
+    {% endif %}
+
+    <!-- PRODUCTS GRID -->
+    {% if products %}
+        <div class="products-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image-wrap">
+                        <a href="{% url 'product_detail' product.slug %}">
+                            <img src="{{ product.get_image_src }}" alt="{{ product.name }}" loading="lazy">
+                        </a>
+                        {% if product.is_in_stock %}
+                            <span class="badge-stock badge-in-stock">In Stock ({{ product.stock }})</span>
+                        {% else %}
+                            <span class="badge-stock badge-out-of-stock">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-info">
+                        <span class="product-category-name">{{ product.category.name }}</span>
+                        <h3 class="product-title">
+                            <a href="{% url 'product_detail' product.slug %}" style="color: inherit;">{{ product.name }}</a>
+                        </h3>
+                        <p class="product-desc-short">{{ product.description }}</p>
+
+                        <div class="product-card-footer">
+                            <span class="product-price">${{ product.price }}</span>
+                            {% if product.is_in_stock %}
+                                <button class="btn btn-sm btn-primary" onclick="addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }}, '{{ product.get_image_src }}', {{ product.stock }}, 1)">
+                                    + Add to Cart
+                                </button>
+                            {% else %}
+                                <button class="btn btn-sm btn-secondary" disabled>Sold Out</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem 1rem; background: white; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 3rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">No products found</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">We couldn't find any products matching your search criteria.</p>
+            <a href="{% url 'product_list' %}" class="btn btn-primary">Clear Filters & View All</a>
+        </div>
+    {% endif %}
+
+{% endblock %}

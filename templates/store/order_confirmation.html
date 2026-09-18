@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order Confirmed #{{ order.id }} | CodeAlpha Store{% endblock %}
+
+{% block content %}
+
+    <div style="max-width: 800px; margin: 3rem auto;">
+        <!-- SUCCESS BANNER -->
+        <div style="text-align: center; background: white; border: 1px solid var(--border-color); border-radius: 16px; padding: 3rem 2rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+            <div style="width: 70px; height: 70px; background-color: #d1fae5; color: #059669; font-size: 2.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                ✓
+            </div>
+            <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem;">Thank You For Your Order!</h1>
+            <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 1.5rem;">
+                Your order <strong>#{{ order.id }}</strong> has been successfully created and is now being processed.
+            </p>
+            <div class="status-pill status-processing" style="display: inline-block;">
+                Status: {{ order.status }}
+            </div>
+        </div>
+
+        <!-- ORDER RECEIPT DETAILS -->
+        <div class="order-card">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color);">
+                Order Receipt Summary
+            </h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; font-size: 0.95rem;">
+                <div>
+                    <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Customer Information</h4>
+                    <p><strong>{{ order.full_name }}</strong></p>
+                    <p style="color: var(--text-muted);">{{ order.email }}</p>
+                    <p style="color: var(--text-muted);">{{ order.phone }}</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Shipping Destination</h4>
+                    <p>{{ order.address }}</p>
+                    <p>{{ order.city }}, {{ order.postal_code }}</p>
+                    <p style="color: var(--text-muted); margin-top: 0.3rem;">Payment: {{ order.payment_method }}</p>
+                </div>
+            </div>
+
+            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Ordered Products</h4>
+            <table class="cart-table" style="margin-bottom: 1.5rem;">
+                <thead>
+                    <tr>
+                        <th>Product Item</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                        <tr>
+                            <td style="font-weight: 600;">{{ item.product_name }}</td>
+                            <td>${{ item.price }}</td>
+                            <td>x{{ item.quantity }}</td>
+                            <td style="font-weight: 700;">${{ item.get_subtotal }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="summary-row total" style="border: none; padding-top: 0;">
+                <span>Total Amount Paid</span>
+                <span style="color: var(--primary); font-size: 1.5rem;">${{ order.total_amount }}</span>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <a href="{% url 'order_history' %}" class="btn btn-lg btn-primary">
+                View All My Orders &rarr;
+            </a>
+            <a href="{% url 'product_list' %}" class="btn btn-lg btn-secondary">
+                Return to Store
+            </a>
+        </div>
+    </div>
+
+{% endblock %}

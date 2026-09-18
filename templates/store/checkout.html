@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout | CodeAlpha Store{% endblock %}
+
+{% block content %}
+
+    <div style="margin: 2rem 0 1rem 0;">
+        <h1 style="font-size: 2rem; font-weight: 800;">Order Checkout</h1>
+        <p style="color: var(--text-muted);">Complete your shipping details to place your order.</p>
+    </div>
+
+    <form id="checkout-form" method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <input type="hidden" id="cart_data" name="cart_data" value="[]">
+
+        <div class="cart-layout">
+            <!-- SHIPPING DETAILS FORM -->
+            <div class="cart-table-card">
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color);">
+                    1. Shipping Information
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    {{ form.full_name }}
+                    {% if form.full_name.errors %}
+                        <div class="form-error">{{ form.full_name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="form-error">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Street Address *</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="form-error">{{ form.address.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">City *</label>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                            <div class="form-error">{{ form.city.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Postal / ZIP Code *</label>
+                        {{ form.postal_code }}
+                        {% if form.postal_code.errors %}
+                            <div class="form-error">{{ form.postal_code.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="form-error">{{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin: 2rem 0 1rem 0; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color);">
+                    2. Payment Option (Demo Only)
+                </h3>
+
+                <div class="form-group">
+                    <label class="form-label">Select Payment Method:</label>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        {% for radio in form.payment_method %}
+                            <label style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); cursor: pointer; background: #f8fafc;">
+                                {{ radio.tag }}
+                                <span style="font-weight: 600; font-size: 0.95rem;">{{ radio.choice_label }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER BREAKDOWN SUMMARY -->
+            <div class="summary-card">
+                <h3 class="summary-title">Items in Order</h3>
+                <div id="checkout-items-list" style="margin-bottom: 1.5rem; max-height: 250px; overflow-y: auto;">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="checkout-subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span style="color: var(--accent); font-weight: 600;">FREE</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total Amount</span>
+                    <span id="checkout-total">$0.00</span>
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                    Place Order Now &rarr;
+                </button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cart = getCart();
+        const hiddenInput = document.getElementById('cart_data');
+        const itemsList = document.getElementById('checkout-items-list');
+        const subtotalEl = document.getElementById('checkout-subtotal');
+        const totalEl = document.getElementById('checkout-total');
+
+        if (cart.length === 0) {
+            showToast("Your cart is empty!", 'warning');
+            window.location.href = "{% url 'cart' %}";
+            return;
+        }
+
+        hiddenInput.value = JSON.stringify(cart);
+
+        let sum = 0;
+        itemsList.innerHTML = '';
+        cart.forEach(item => {
+            const sub = item.price * item.quantity;
+            sum += sub;
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.style.alignItems = 'center';
+            div.style.marginBottom = '0.8rem';
+            div.style.fontSize = '0.9rem';
+            div.innerHTML = `
+                <div>
+                    <strong style="color: var(--text-primary);">${item.name}</strong>
+                    <div style="color: var(--text-muted); font-size: 0.8rem;">Qty: ${item.quantity} × $${item.price.toFixed(2)}</div>
+                </div>
+                <span style="font-weight: 700;">$${sub.toFixed(2)}</span>
+            `;
+            itemsList.appendChild(div);
+        });
+
+        subtotalEl.textContent = `$${sum.toFixed(2)}`;
+        totalEl.textContent = `$${sum.toFixed(2)}`;
+
+        // Clear cart after submitting checkout
+        document.getElementById('checkout-form').addEventListener('submit', () => {
+            clearCart();
+        });
+    });
+</script>
+{% endblock %}

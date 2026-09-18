@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} Details | CodeAlpha Store{% endblock %}
+
+{% block content %}
+
+    <div style="margin: 2rem 0 1rem 0;">
+        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+            <a href="{% url 'order_history' %}">&larr; Back to Order History</a>
+        </div>
+        <h1 style="font-size: 2rem; font-weight: 800;">Order Details #{{ order.id }}</h1>
+        <p style="color: var(--text-muted);">Placed on {{ order.created_at|date:"F d, Y at h:i A" }}</p>
+    </div>
+
+    <div class="order-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+            <div>
+                <span class="status-pill status-{{ order.status|lower }}">Status: {{ order.status }}</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">
+                Total: ${{ order.total_amount }}
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+            <div>
+                <h3 style="font-size: 1rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem;">Delivery Details</h3>
+                <p><strong>Recipient:</strong> {{ order.full_name }}</p>
+                <p><strong>Email:</strong> {{ order.email }}</p>
+                <p><strong>Phone:</strong> {{ order.phone }}</p>
+                <p><strong>Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.postal_code }}</p>
+            </div>
+            <div>
+                <h3 style="font-size: 1rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem;">Payment Information</h3>
+                <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                <p><strong>Payment Status:</strong> Paid / Confirmed (Demo)</p>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Items Breakdown</h3>
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Item Description</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr>
+                        <td style="font-weight: 600;">
+                            {% if item.product %}
+                                <a href="{% url 'product_detail' item.product.slug %}">{{ item.product_name }}</a>
+                            {% else %}
+                                {{ item.product_name }}
+                            {% endif %}
+                        </td>
+                        <td>${{ item.price }}</td>
+                        <td>x{{ item.quantity }}</td>
+                        <td style="font-weight: 700;">${{ item.get_subtotal }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

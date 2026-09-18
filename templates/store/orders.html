@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Order History | CodeAlpha Store{% endblock %}
+
+{% block content %}
+
+    <div style="margin: 2rem 0 1.5rem 0;">
+        <h1 style="font-size: 2rem; font-weight: 800;">My Order History</h1>
+        <p style="color: var(--text-muted);">View all past orders placed with your account.</p>
+    </div>
+
+    {% if orders %}
+        <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
+            {% for order in orders %}
+                <div class="order-card">
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; flex-wrap: wrap; gap: 0.8rem;">
+                        <div>
+                            <span style="font-size: 1.15rem; font-weight: 800; color: var(--dark-bg);">Order #{{ order.id }}</span>
+                            <span style="color: var(--text-muted); font-size: 0.88rem; margin-left: 0.8rem;">Placed on {{ order.created_at|date:"M d, Y - h:i A" }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">${{ order.total_amount }}</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Items in this Order</h4>
+                        <ul style="list-style: none; padding-left: 0;">
+                            {% for item in order.items.all %}
+                                <li style="display: flex; justify-content: space-between; font-size: 0.95rem; padding: 0.3rem 0;">
+                                    <span>• <strong>{{ item.quantity }}x</strong> {{ item.product_name }}</span>
+                                    <span style="color: var(--text-muted);">${{ item.get_subtotal }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; pt: 0.8rem; border-top: 1px dashed var(--border-color);">
+                        <span style="font-size: 0.88rem; color: var(--text-muted);">Ship to: {{ order.full_name }} ({{ order.city }})</span>
+                        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline">
+                            View Order Details &rarr;
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 4rem 1rem; background: white; border-radius: 16px; border: 1px solid var(--border-color); margin: 2rem 0;">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">📦</div>
+            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">No Past Orders Found</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">You haven't placed any orders yet. Explore our catalog and make your first purchase!</p>
+            <a href="{% url 'product_list' %}" class="btn btn-lg btn-primary">Browse Catalog &rarr;</a>
+        </div>
+    {% endif %}
+
+{% endblock %}
