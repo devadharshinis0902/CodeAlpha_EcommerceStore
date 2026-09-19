@@ -98,7 +98,7 @@
 
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span id="checkout-subtotal">$0.00</span>
+                    <span id="checkout-subtotal">₹0.00</span>
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>
@@ -107,7 +107,7 @@
 
                 <div class="summary-row total">
                     <span>Total Amount</span>
-                    <span id="checkout-total">$0.00</span>
+                    <span id="checkout-total">₹0.00</span>
                 </div>
 
                 <button type="submit" class="btn btn-lg btn-primary" style="width: 100%; margin-top: 1.5rem;">
@@ -150,15 +150,15 @@
             div.innerHTML = `
                 <div>
                     <strong style="color: var(--text-primary);">${item.name}</strong>
-                    <div style="color: var(--text-muted); font-size: 0.8rem;">Qty: ${item.quantity} × $${item.price.toFixed(2)}</div>
+                    <div style="color: var(--text-muted); font-size: 0.8rem;">Qty: ${item.quantity} × ₹${item.price.toFixed(2)}</div>
                 </div>
-                <span style="font-weight: 700;">$${sub.toFixed(2)}</span>
+                <span style="font-weight: 700;">₹${sub.toFixed(2)}</span>
             `;
             itemsList.appendChild(div);
         });
 
-        subtotalEl.textContent = `$${sum.toFixed(2)}`;
-        totalEl.textContent = `$${sum.toFixed(2)}`;
+        subtotalEl.textContent = `₹${sum.toFixed(2)}`;
+        totalEl.textContent = `₹${sum.toFixed(2)}`;
 
         // Clear cart after submitting checkout
         document.getElementById('checkout-form').addEventListener('submit', () => {
@@ -167,3 +167,4 @@
     });
 </script>
 {% endblock %}
+

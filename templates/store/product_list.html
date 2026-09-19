@@ -140,9 +140,9 @@
 
                         <div class="product-card-pricing">
                             <div class="price-container">
-                                <span class="product-price">${{ product.price }}</span>
+                                <span class="product-price">₹{{ product.price }}</span>
                                 {% if product.original_price %}
-                                    <span class="product-original-price">${{ product.original_price }}</span>
+                                    <span class="product-original-price">₹{{ product.original_price }}</span>
                                 {% endif %}
                             </div>
 
@@ -159,6 +159,7 @@
                                 {% endif %}
                             </div>
                         </div>
+
                     </div>
                 </div>
             {% endfor %}

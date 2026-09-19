@@ -56,9 +56,9 @@
                     {% for item in order.items.all %}
                         <tr>
                             <td style="font-weight: 600;">{{ item.product_name }}</td>
-                            <td>${{ item.price }}</td>
+                            <td>₹{{ item.price }}</td>
                             <td>x{{ item.quantity }}</td>
-                            <td style="font-weight: 700;">${{ item.get_subtotal }}</td>
+                            <td style="font-weight: 700;">₹{{ item.get_subtotal }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -66,8 +66,9 @@
 
             <div class="summary-row total" style="border: none; padding-top: 0;">
                 <span>Total Amount Paid</span>
-                <span style="color: var(--primary); font-size: 1.5rem;">${{ order.total_amount }}</span>
+                <span style="color: var(--primary); font-size: 1.5rem;">₹{{ order.total_amount }}</span>
             </div>
+
         </div>
 
         <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">

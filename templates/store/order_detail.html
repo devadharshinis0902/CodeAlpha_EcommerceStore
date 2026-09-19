@@ -20,7 +20,7 @@
                 <span class="status-pill status-{{ order.status|lower }}">Status: {{ order.status }}</span>
             </div>
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">
-                Total: ${{ order.total_amount }}
+                Total: ₹{{ order.total_amount }}
             </div>
         </div>
 
@@ -59,13 +59,14 @@
                                 {{ item.product_name }}
                             {% endif %}
                         </td>
-                        <td>${{ item.price }}</td>
+                        <td>₹{{ item.price }}</td>
                         <td>x{{ item.quantity }}</td>
-                        <td style="font-weight: 700;">${{ item.get_subtotal }}</td>
+                        <td style="font-weight: 700;">₹{{ item.get_subtotal }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 
 {% endblock %}

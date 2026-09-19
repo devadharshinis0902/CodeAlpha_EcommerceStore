@@ -37,11 +37,12 @@
             </div>
 
             <div class="product-detail-price-wrap">
-                <span class="product-detail-price">${{ product.price }}</span>
+                <span class="product-detail-price">₹{{ product.price }}</span>
                 {% if product.original_price %}
-                    <span class="product-detail-original-price">${{ product.original_price }}</span>
+                    <span class="product-detail-original-price">₹{{ product.original_price }}</span>
                 {% endif %}
             </div>
+
 
             <p class="product-detail-desc">{{ product.description }}</p>
 
@@ -92,9 +93,10 @@
                                 <a href="{% url 'product_detail' item.slug %}" style="color: inherit;">{{ item.name }}</a>
                             </h3>
                             <div class="product-card-pricing" style="margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--border-color);">
-                                <span class="product-price">${{ item.price }}</span>
+                                <span class="product-price">₹{{ item.price }}</span>
                                 <a href="{% url 'product_detail' item.slug %}" class="btn btn-sm btn-outline">View Item</a>
                             </div>
+
                         </div>
                     </div>
                 {% endfor %}
