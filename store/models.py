@@ -25,10 +25,12 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(0.01)])
     image_url = models.URLField(max_length=500, blank=True, help_text="External image URL or static image URL")
     image = models.ImageField(upload_to='products/', blank=True, null=True)
     stock = models.PositiveIntegerField(default=10)
     rating = models.DecimalField(max_digits=3, decimal_places=1, default=4.5)
+    is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -41,6 +43,14 @@ class Product(models.Model):
     @property
     def is_in_stock(self):
         return self.stock > 0
+
+    @property
+    def discount_percentage(self):
+        if self.original_price and self.original_price > self.price:
+            discount = ((self.original_price - self.price) / self.original_price) * 100
+            return int(round(discount))
+        return 0
+
 
     def get_image_src(self):
         if self.image:

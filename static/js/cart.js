@@ -1,6 +1,6 @@
 /* Vanilla JS Shopping Cart Engine with LocalStorage Persistence */
 
-const CART_KEY = 'codealpha_ecommerce_cart';
+const CART_KEY = 'fashion_store_cart';
 
 /**
  * Get Cart Items from LocalStorage
@@ -60,7 +60,7 @@ function addToCart(id, name, price, image, stock, quantityToAdd = 1) {
             cart[existingIndex].quantity = stock;
         } else {
             cart[existingIndex].quantity = newQty;
-            showToast(`Updated '${name}' quantity in your cart.`, 'success');
+            showToast(`Updated '${name}' in your bag.`, 'success');
         }
     } else {
         if (quantityToAdd > stock) {
@@ -75,10 +75,18 @@ function addToCart(id, name, price, image, stock, quantityToAdd = 1) {
             stock: stock,
             quantity: quantityToAdd
         });
-        showToast(`Added '${name}' to your cart!`, 'success');
+        showToast(`Added '${name}' to your bag!`, 'success');
     }
 
     saveCart(cart);
+}
+
+/**
+ * Buy Now - Add to Cart and Redirect to Cart Page
+ */
+function buyNow(id, name, price, image, stock) {
+    addToCart(id, name, price, image, stock, 1);
+    window.location.href = "/cart/";
 }
 
 /**
@@ -118,7 +126,7 @@ function removeFromCart(id) {
     cart = cart.filter(i => i.id !== id);
     saveCart(cart);
     if (item) {
-        showToast(`Removed '${item.name}' from your cart.`, 'info');
+        showToast(`Removed '${item.name}' from your bag.`, 'info');
     }
     renderCartPage();
 }
@@ -167,7 +175,7 @@ function renderCartPage() {
                 <div class="cart-item-info">
                     <img src="${item.image}" alt="${item.name}" class="cart-item-img">
                     <div>
-                        <div style="font-weight: 700;">${item.name}</div>
+                        <div style="font-weight: 700; color: var(--text-primary);">${item.name}</div>
                         <div style="font-size: 0.85rem; color: var(--text-muted);">$${item.price.toFixed(2)} each</div>
                     </div>
                 </div>
@@ -180,7 +188,7 @@ function renderCartPage() {
                 </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Max: ${item.stock}</div>
             </td>
-            <td style="font-weight: 700;">$${itemSubtotal.toFixed(2)}</td>
+            <td style="font-weight: 700; color: var(--text-primary);">$${itemSubtotal.toFixed(2)}</td>
             <td>
                 <button class="btn btn-sm btn-danger" onclick="removeFromCart(${item.id})">Remove</button>
             </td>

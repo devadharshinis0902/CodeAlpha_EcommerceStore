@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create Account | CodeAlpha Store{% endblock %}
+{% block title %}Create Account | Fashion Store{% endblock %}
 
 {% block content %}
 
     <div class="auth-card">
         <h1 class="auth-title">Create an Account</h1>
-        <p class="auth-subtitle">Join CodeAlpha Store to manage orders & checkout seamlessly.</p>
+        <p class="auth-subtitle">Join Fashion Store to track orders & checkout seamlessly.</p>
+
 
         <form method="POST" action="{% url 'register' %}" novalidate>
             {% csrf_token %}

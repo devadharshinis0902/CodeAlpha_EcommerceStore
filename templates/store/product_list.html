@@ -1,28 +1,85 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Explore Catalog | CodeAlpha Store{% endblock %}
+{% block title %}Fashion Store | Style That Defines You{% endblock %}
 
 {% block content %}
 
     {% if not search_query and not selected_category %}
-    <!-- HERO BANNER -->
-    <section class="hero-banner">
-        <div class="container">
+    <!-- FASHION HERO BANNER -->
+    <section class="fashion-hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-container">
             <div class="hero-content">
-                <span class="hero-tag">Task 1 Internship Project</span>
-                <h1 class="hero-title">Premium Products, Seamless Shopping.</h1>
-                <p class="hero-subtitle">Discover high-quality electronics, fashion, audio gear, and lifestyle products with instant local delivery.</p>
-                <a href="#catalog" class="btn btn-lg btn-primary">Shop Catalog Now &rarr;</a>
+                <span class="hero-badge">New Season Arrival 2026</span>
+                <h1 class="hero-title">Style That Defines You</h1>
+                <p class="hero-subtitle">Discover the latest fashion trends, everyday essentials, and timeless styles curated for your signature look.</p>
+                <div class="hero-cta-group">
+                    <a href="#catalog" class="btn btn-lg btn-primary">Shop Now &rarr;</a>
+                    <a href="#categories" class="btn btn-lg btn-outline-light">Explore Collections</a>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- FASHION CATEGORIES GRID -->
+    <section id="categories" class="fashion-categories-section">
+        <div class="section-title-wrap">
+            <h2 class="section-title">Shop By Category</h2>
+            <p class="section-subtitle">Curated collections for every style and occasion</p>
+        </div>
+
+        <div class="category-cards-grid">
+            <a href="{% url 'product_list' %}?category=womens-fashion" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80" alt="Women's Fashion">
+                <div class="cat-card-overlay">
+                    <h3>Women's Fashion</h3>
+                    <span>Explore Collection &rarr;</span>
+                </div>
+            </a>
+            <a href="{% url 'product_list' %}?category=mens-fashion" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1490578474895-699bc4e2cf59?auto=format&fit=crop&w=600&q=80" alt="Men's Fashion">
+                <div class="cat-card-overlay">
+                    <h3>Men's Fashion</h3>
+                    <span>Explore Collection &rarr;</span>
+                </div>
+            </a>
+            <a href="{% url 'product_list' %}?category=dresses" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=600&q=80" alt="Dresses & Kurtis">
+                <div class="cat-card-overlay">
+                    <h3>Dresses & Kurtis</h3>
+                    <span>Explore Collection &rarr;</span>
+                </div>
+            </a>
+            <a href="{% url 'product_list' %}?category=footwear" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80" alt="Footwear">
+                <div class="cat-card-overlay">
+                    <h3>Footwear</h3>
+                    <span>Explore Collection &rarr;</span>
+                </div>
+            </a>
+            <a href="{% url 'product_list' %}?category=handbags" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80" alt="Handbags">
+                <div class="cat-card-overlay">
+                    <h3>Handbags & Accessories</h3>
+                    <span>Explore Collection &rarr;</span>
+                </div>
+            </a>
+            <a href="{% url 'product_list' %}?category=jewellery" class="cat-card">
+                <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80" alt="Jewellery">
+                <div class="cat-card-overlay">
+                    <h3>Jewellery & Watches</h3>
+                    <span>Explore Collection &rarr;</span>
+                </div>
+            </a>
         </div>
     </section>
     {% endif %}
 
     <!-- CATALOG TOOLBAR -->
-    <div id="catalog" class="catalog-toolbar" style="margin-top: 2rem;">
+    <div id="catalog" class="catalog-toolbar">
         <div class="category-pills">
-            <a href="{% url 'product_list' %}" class="pill {% if not selected_category %}active{% endif %}">All Products</a>
+            <a href="{% url 'product_list' %}" class="pill {% if not selected_category %}active{% endif %}">All Fashion</a>
             {% for cat in categories %}
                 <a href="{% url 'product_list' %}?category={{ cat.slug }}" class="pill {% if selected_category and selected_category.slug == cat.slug %}active{% endif %}">
                     {{ cat.name }}
@@ -35,7 +92,7 @@
             {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
             <label for="sort" style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted);">Sort By:</label>
             <select name="sort" id="sort" class="sort-select" onchange="this.form.submit()">
-                <option value="newest" {% if sort_option == 'newest' %}selected{% endif %}>Newest Arrivals</option>
+                <option value="newest" {% if sort_option == 'newest' %}selected{% endif %}>New Arrivals</option>
                 <option value="price_asc" {% if sort_option == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
                 <option value="price_desc" {% if sort_option == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
                 <option value="rating" {% if sort_option == 'rating' %}selected{% endif %}>Top Rated</option>
@@ -45,7 +102,7 @@
 
     {% if search_query %}
         <div style="margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-muted);">
-            Showing results for "<strong style="color: var(--text-primary);">{{ search_query }}</strong>" ({{ total_products }} products found)
+            Showing fashion results for "<strong style="color: var(--text-primary);">{{ search_query }}</strong>" ({{ total_products }} items found)
         </div>
     {% endif %}
 
@@ -58,29 +115,49 @@
                         <a href="{% url 'product_detail' product.slug %}">
                             <img src="{{ product.get_image_src }}" alt="{{ product.name }}" loading="lazy">
                         </a>
+
+                        {% if product.discount_percentage > 0 %}
+                            <span class="badge-discount">-{{ product.discount_percentage }}% OFF</span>
+                        {% endif %}
+
                         {% if product.is_in_stock %}
-                            <span class="badge-stock badge-in-stock">In Stock ({{ product.stock }})</span>
+                            <span class="badge-stock badge-in-stock">In Stock</span>
                         {% else %}
-                            <span class="badge-stock badge-out-of-stock">Out of Stock</span>
+                            <span class="badge-stock badge-out-of-stock">Sold Out</span>
                         {% endif %}
                     </div>
                     
                     <div class="product-info">
-                        <span class="product-category-name">{{ product.category.name }}</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+                            <span class="product-category-name">{{ product.category.name }}</span>
+                            <span class="product-rating">⭐ {{ product.rating }}</span>
+                        </div>
+                        
                         <h3 class="product-title">
-                            <a href="{% url 'product_detail' product.slug %}" style="color: inherit;">{{ product.name }}</a>
+                            <a href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
                         </h3>
                         <p class="product-desc-short">{{ product.description }}</p>
 
-                        <div class="product-card-footer">
-                            <span class="product-price">${{ product.price }}</span>
-                            {% if product.is_in_stock %}
-                                <button class="btn btn-sm btn-primary" onclick="addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }}, '{{ product.get_image_src }}', {{ product.stock }}, 1)">
-                                    + Add to Cart
-                                </button>
-                            {% else %}
-                                <button class="btn btn-sm btn-secondary" disabled>Sold Out</button>
-                            {% endif %}
+                        <div class="product-card-pricing">
+                            <div class="price-container">
+                                <span class="product-price">${{ product.price }}</span>
+                                {% if product.original_price %}
+                                    <span class="product-original-price">${{ product.original_price }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="action-buttons-group">
+                                {% if product.is_in_stock %}
+                                    <button class="btn btn-sm btn-primary" onclick="addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }}, '{{ product.get_image_src }}', {{ product.stock }}, 1)">
+                                        Add to Cart
+                                    </button>
+                                    <button class="btn btn-sm btn-accent" onclick="buyNow({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }}, '{{ product.get_image_src }}', {{ product.stock }})">
+                                        Buy Now
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-secondary" disabled>Sold Out</button>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,10 +165,10 @@
         </div>
     {% else %}
         <div style="text-align: center; padding: 4rem 1rem; background: white; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 3rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">No products found</h2>
+            <div style="font-size: 3rem; margin-bottom: 1rem;">👗</div>
+            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">No fashion items found</h2>
             <p style="color: var(--text-muted); margin-bottom: 1.5rem;">We couldn't find any products matching your search criteria.</p>
-            <a href="{% url 'product_list' %}" class="btn btn-primary">Clear Filters & View All</a>
+            <a href="{% url 'product_list' %}" class="btn btn-primary">Browse All Collections</a>
         </div>
     {% endif %}
 

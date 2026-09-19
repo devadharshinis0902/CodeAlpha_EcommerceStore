@@ -4,47 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Simple E-commerce Store | CodeAlpha Internship{% endblock %}</title>
-    <!-- Fonts -->
+    <title>{% block title %}Fashion Store | Style That Defines You{% endblock %}</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <!-- NAVIGATION BAR -->
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-bar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; font-weight: 500;">
+            <span>✨ Free Shipping on Orders Over $50 | Express Global Delivery</span>
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="#contact" style="color: inherit;">Customer Support</a>
+                <a href="{% url 'cart' %}" style="color: inherit;">Track Order</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN NAVIGATION BAR -->
     <nav class="navbar">
         <div class="container">
             <a href="{% url 'product_list' %}" class="nav-brand">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                <span>CodeAlpha</span>Store
+                <span class="brand-text"><span class="brand-accent">Fashion</span>Store</span>
             </a>
 
             <div class="nav-search">
                 <form action="{% url 'product_list' %}" method="GET">
                     <span class="search-icon">🔍</span>
-                    <input type="text" name="q" class="search-input" placeholder="Search products, brands, categories..." value="{{ search_query|default:'' }}">
+                    <input type="text" name="q" class="search-input" placeholder="Search dresses, shirts, sarees, handbags, shoes..." value="{{ search_query|default:'' }}">
                 </form>
             </div>
 
             <ul class="nav-menu">
                 <li><a href="{% url 'product_list' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'product_list' %}?category=womens-fashion" class="nav-link">Women</a></li>
+                <li><a href="{% url 'product_list' %}?category=mens-fashion" class="nav-link">Men</a></li>
+                <li><a href="{% url 'product_list' %}?category=footwear" class="nav-link">Footwear</a></li>
+                <li><a href="{% url 'product_list' %}?category=accessories" class="nav-link">Accessories</a></li>
+                
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'order_history' %}" class="nav-link">My Orders</a></li>
                     <li class="user-dropdown">
-                        <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">Hi, {{ user.first_name|default:user.username }}</span>
+                        <span class="user-greeting">Hi, {{ user.first_name|default:user.username }}</span>
                         <a href="{% url 'logout' %}" class="btn btn-sm btn-secondary">Logout</a>
                     </li>
                 {% else %}
-                    <li><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                    <li><a href="{% url 'login' %}" class="nav-link">Sign In</a></li>
                     <li><a href="{% url 'register' %}" class="btn btn-sm btn-primary">Register</a></li>
                 {% endif %}
                 <li>
                     <a href="{% url 'cart' %}" class="nav-link cart-link">
-                        🛒 Cart <span class="cart-badge">0</span>
+                        🛍️ Cart <span class="cart-badge">0</span>
                     </a>
                 </li>
             </ul>
@@ -73,34 +88,58 @@
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <div class="footer-brand">CodeAlpha Store</div>
-                    <p style="font-size: 0.88rem; line-height: 1.5;">A clean, full-stack Python Django e-commerce platform built for CodeAlpha Full Stack Internship Task 1.</p>
+                    <div class="footer-brand"><span style="color: var(--primary);">Fashion</span>Store</div>
+                    <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 0.75rem; line-height: 1.6; max-width: 320px;">
+                        Your premier destination for trendsetting fashion, everyday essentials, luxury ethnic wear, and timeless accessories.
+                    </p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.25rem; font-size: 1.2rem;">
+                        <span>📷</span> <span>📘</span> <span>📌</span> <span>🐦</span>
+                    </div>
                 </div>
+
                 <div>
-                    <div class="footer-title">Quick Links</div>
+                    <div class="footer-title">Collections</div>
                     <ul class="footer-links">
-                        <li><a href="{% url 'product_list' %}">Browse Products</a></li>
-                        <li><a href="{% url 'cart' %}">Shopping Cart</a></li>
+                        <li><a href="{% url 'product_list' %}?category=womens-fashion">Women's Fashion</a></li>
+                        <li><a href="{% url 'product_list' %}?category=mens-fashion">Men's Collection</a></li>
+                        <li><a href="{% url 'product_list' %}?category=dresses">Dresses & Kurtis</a></li>
+                        <li><a href="{% url 'product_list' %}?category=footwear">Footwear & Heels</a></li>
+                        <li><a href="{% url 'product_list' %}?category=handbags">Handbags & Bags</a></li>
+                        <li><a href="{% url 'product_list' %}?category=jewellery">Jewellery & Watches</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="footer-title">Customer Care</div>
+                    <ul class="footer-links">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#support">Customer Support</a></li>
+                        <li><a href="#shipping">Shipping & Delivery</a></li>
+                        <li><a href="#returns">Returns & Refunds</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'order_history' %}">My Past Orders</a></li>
-                        {% else %}
-                            <li><a href="{% url 'login' %}">Account Login</a></li>
-                            <li><a href="{% url 'register' %}">Create Account</a></li>
+                            <li><a href="{% url 'order_history' %}">Track Order History</a></li>
                         {% endif %}
                     </ul>
                 </div>
+
                 <div>
-                    <div class="footer-title">Internship Details</div>
+                    <div class="footer-title">Information & Legal</div>
                     <ul class="footer-links">
-                        <li>Project: Simple E-Commerce Store</li>
-                        <li>Task: Full Stack Development Task 1</li>
-                        <li>Backend: Django & SQLite</li>
-                        <li>Frontend: Vanilla JS, HTML5, CSS3</li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms & Conditions</a></li>
+                        <li><a href="#faq">Frequently Asked Questions</a></li>
+                        <li><a href="#careers">Join Our Team</a></li>
+                        <li><a href="#store-locator">Store Locator</a></li>
                     </ul>
                 </div>
             </div>
+
             <div class="footer-bottom">
-                &copy; 2026 CodeAlpha E-Commerce Store. Developed for CodeAlpha Internship.
+                <div>&copy; {% now "Y" %} Fashion Store. All rights reserved.</div>
+                <div style="display: flex; gap: 1rem; color: #9ca3af; font-size: 0.85rem;">
+                    <span>Visa</span> • <span>Mastercard</span> • <span>PayPal</span> • <span>UPI</span> • <span>Cash on Delivery</span>
+                </div>
             </div>
         </div>
     </footer>

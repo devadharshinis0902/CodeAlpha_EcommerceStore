@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Shopping Cart | CodeAlpha Store{% endblock %}
+{% block title %}Shopping Bag | Fashion Store{% endblock %}
 
 {% block content %}
 
     <div style="margin: 2rem 0 1rem 0;">
-        <h1 style="font-size: 2rem; font-weight: 800;">Your Shopping Cart</h1>
-        <p style="color: var(--text-muted);">Review items before proceeding to checkout.</p>
+        <h1 style="font-size: 2rem; font-weight: 800;">Your Shopping Bag</h1>
+        <p style="color: var(--text-muted);">Review your selected fashion items before proceeding to secure checkout.</p>
     </div>
 
     <!-- EMPTY CART STATE -->
     <div id="cart-empty-state" style="display: none; text-align: center; padding: 4rem 1rem; background: white; border-radius: 16px; border: 1px solid var(--border-color); margin: 2rem 0;">
-        <div style="font-size: 3.5rem; margin-bottom: 1rem;">🛒</div>
-        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Your Cart is Currently Empty</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Looks like you haven't added any products to your shopping cart yet.</p>
-        <a href="{% url 'product_list' %}" class="btn btn-lg btn-primary">Start Shopping Now &rarr;</a>
+        <div style="font-size: 3.5rem; margin-bottom: 1rem;">🛍️</div>
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Your Shopping Bag is Currently Empty</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Discover latest arrivals and trendsetting fashion styles.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-lg btn-primary">Explore Fashion Collections &rarr;</a>
     </div>
 
     <!-- CART LAYOUT (POPULATED BY JS) -->
@@ -25,7 +25,7 @@
             <table class="cart-table">
                 <thead>
                     <tr>
-                        <th>Product</th>
+                        <th>Item</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
                         <th>Action</th>
@@ -46,11 +46,11 @@
                 <span id="cart-subtotal">$0.00</span>
             </div>
             <div class="summary-row">
-                <span>Estimated Shipping</span>
+                <span>Standard Delivery</span>
                 <span style="color: var(--accent); font-weight: 600;">FREE</span>
             </div>
             <div class="summary-row">
-                <span>Taxes & Fees</span>
+                <span>Estimated Taxes</span>
                 <span>$0.00</span>
             </div>
 
@@ -62,14 +62,14 @@
             <div style="margin-top: 1.8rem;">
                 {% if user.is_authenticated %}
                     <a href="{% url 'checkout' %}" class="btn btn-lg btn-primary" style="width: 100%;">
-                        Proceed to Checkout &rarr;
+                        Proceed to Secure Checkout &rarr;
                     </a>
                 {% else %}
                     <a href="{% url 'login' %}?next={% url 'checkout' %}" class="btn btn-lg btn-primary" style="width: 100%;">
-                        Log In to Checkout &rarr;
+                        Sign In to Checkout &rarr;
                     </a>
                     <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
-                        Authentication is required to place orders.
+                        Sign in required for order placement & delivery tracking.
                     </p>
                 {% endif %}
             </div>

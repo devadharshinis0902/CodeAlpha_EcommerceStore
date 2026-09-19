@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Checkout | CodeAlpha Store{% endblock %}
+{% block title %}Checkout | Fashion Store{% endblock %}
 
 {% block content %}
 
     <div style="margin: 2rem 0 1rem 0;">
         <h1 style="font-size: 2rem; font-weight: 800;">Order Checkout</h1>
-        <p style="color: var(--text-muted);">Complete your shipping details to place your order.</p>
+        <p style="color: var(--text-muted);">Complete your shipping and delivery details to place your order.</p>
     </div>
+
 
     <form id="checkout-form" method="POST" action="{% url 'checkout' %}">
         {% csrf_token %}

@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ product.name }} | CodeAlpha Store{% endblock %}
+{% block title %}{{ product.name }} | Fashion Store{% endblock %}
 
 {% block content %}
 
     <!-- BREADCRUMBS -->
-    <div style="margin: 1.5rem 0 0.5rem 0; font-size: 0.9rem; color: var(--text-muted);">
-        <a href="{% url 'product_list' %}">Home</a> &rarr; 
-        <a href="{% url 'product_list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a> &rarr; 
+    <div style="margin: 1.5rem 0 1rem 0; font-size: 0.88rem; color: var(--text-muted);">
+        <a href="{% url 'product_list' %}" style="color: var(--text-muted);">Home</a> &rarr; 
+        <a href="{% url 'product_list' %}?category={{ product.category.slug }}" style="color: var(--text-muted);">{{ product.category.name }}</a> &rarr; 
         <span style="color: var(--text-primary); font-weight: 600;">{{ product.name }}</span>
     </div>
 
@@ -21,25 +21,33 @@
 
         <!-- DETAILS CONTENT -->
         <div class="product-detail-content">
-            <span class="product-category-name" style="font-size: 0.9rem; margin-bottom: 0.4rem;">{{ product.category.name }}</span>
+            <span class="product-category-name" style="font-size: 0.85rem; margin-bottom: 0.4rem; letter-spacing: 0.08em;">{{ product.category.name }}</span>
             <h1 class="product-detail-title">{{ product.name }}</h1>
             
             <div class="product-detail-meta">
-                <span class="rating-badge">★ {{ product.rating }} / 5.0</span>
+                <span class="rating-badge">⭐ {{ product.rating }} / 5.0</span>
+                {% if product.discount_percentage > 0 %}
+                    <span class="badge-discount" style="position: static; font-size: 0.85rem; padding: 0.25rem 0.6rem;">-{{ product.discount_percentage }}% OFF</span>
+                {% endif %}
                 {% if product.is_in_stock %}
-                    <span class="badge-stock badge-in-stock" style="position: static;">In Stock ({{ product.stock }} units available)</span>
+                    <span class="badge-stock badge-in-stock" style="position: static;">In Stock ({{ product.stock }} items available)</span>
                 {% else %}
-                    <span class="badge-stock badge-out-of-stock" style="position: static;">Out of Stock</span>
+                    <span class="badge-stock badge-out-of-stock" style="position: static;">Sold Out</span>
                 {% endif %}
             </div>
 
-            <div class="product-detail-price">${{ product.price }}</div>
+            <div class="product-detail-price-wrap">
+                <span class="product-detail-price">${{ product.price }}</span>
+                {% if product.original_price %}
+                    <span class="product-detail-original-price">${{ product.original_price }}</span>
+                {% endif %}
+            </div>
 
             <p class="product-detail-desc">{{ product.description }}</p>
 
             {% if product.is_in_stock %}
                 <!-- QUANTITY SELECTOR -->
-                <div class="form-group">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
                     <label class="form-label">Quantity:</label>
                     <div class="qty-picker">
                         <button type="button" class="qty-btn" onclick="adjustQty(-1)">-</button>
@@ -48,13 +56,13 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                    <button class="btn btn-lg btn-primary" onclick="handleAddCart()" style="flex: 1;">
-                        🛒 Add to Cart
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-lg btn-primary" onclick="handleAddCart()" style="flex: 1; min-width: 180px;">
+                        🛍️ Add to Cart
                     </button>
-                    <a href="{% url 'cart' %}" class="btn btn-lg btn-secondary">
-                        View Cart &rarr;
-                    </a>
+                    <button class="btn btn-lg btn-accent" onclick="handleBuyNow()" style="flex: 1; min-width: 180px;">
+                        ⚡ Buy Now
+                    </button>
                 </div>
             {% else %}
                 <button class="btn btn-lg btn-secondary" disabled style="width: 100%;">
@@ -64,10 +72,12 @@
         </div>
     </div>
 
-    <!-- RELATED PRODUCTS -->
+    <!-- RELATED FASHION ITEMS -->
     {% if related_products %}
         <div style="margin: 4rem 0 2rem 0;">
-            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">You Might Also Like</h2>
+            <div class="section-title-wrap" style="text-align: left; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.5rem; font-weight: 700;">You Might Also Love</h2>
+            </div>
             <div class="products-grid">
                 {% for item in related_products %}
                     <div class="product-card">
@@ -81,9 +91,9 @@
                             <h3 class="product-title">
                                 <a href="{% url 'product_detail' item.slug %}" style="color: inherit;">{{ item.name }}</a>
                             </h3>
-                            <div class="product-card-footer">
+                            <div class="product-card-pricing" style="margin-top: auto; padding-top: 0.8rem; border-top: 1px solid var(--border-color);">
                                 <span class="product-price">${{ item.price }}</span>
-                                <a href="{% url 'product_detail' item.slug %}" class="btn btn-sm btn-outline">Details</a>
+                                <a href="{% url 'product_detail' item.slug %}" class="btn btn-sm btn-outline">View Item</a>
                             </div>
                         </div>
                     </div>
@@ -113,6 +123,12 @@
     function handleAddCart() {
         const qty = parseInt(document.getElementById('detail-qty').value) || 1;
         addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }}, '{{ product.get_image_src }}', {{ product.stock }}, qty);
+    }
+
+    function handleBuyNow() {
+        const qty = parseInt(document.getElementById('detail-qty').value) || 1;
+        addToCart({{ product.id }}, '{{ product.name|escapejs }}', {{ product.price }}, '{{ product.get_image_src }}', {{ product.stock }}, qty);
+        window.location.href = "{% url 'cart' %}";
     }
 </script>
 {% endblock %}

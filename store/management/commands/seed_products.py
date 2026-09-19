@@ -5,177 +5,260 @@ from store.models import Category, Product
 
 
 class Command(BaseCommand):
-    help = 'Seeds database with realistic sample categories, products, and test user accounts.'
+    help = 'Seeds database with realistic sample fashion categories, products, and test user accounts.'
 
     def handle(self, *args, **kwargs):
-        self.stdout.write(self.style.WARNING('Starting database seeding...'))
+        self.stdout.write(self.style.WARNING('Starting Fashion Store database seeding...'))
 
         # 1. Create Superuser / Test Users
         if not User.objects.filter(username='admin').exists():
             admin_user = User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
-            admin_user.first_name = 'Store'
+            admin_user.first_name = 'Fashion'
             admin_user.last_name = 'Admin'
             admin_user.save()
             self.stdout.write(self.style.SUCCESS('Created superuser: admin / admin123'))
 
         if not User.objects.filter(username='testuser').exists():
             test_user = User.objects.create_user('testuser', 'testuser@example.com', 'Password123!')
-            test_user.first_name = 'Alex'
-            test_user.last_name = 'Morgan'
+            test_user.first_name = 'Sophia'
+            test_user.last_name = 'Styles'
             test_user.save()
             self.stdout.write(self.style.SUCCESS('Created demo user: testuser / Password123!'))
 
-        # 2. Sample Categories
+        # 2. Fashion Categories
         categories_data = [
-            {
-                'name': 'Audio & Headphones',
-                'description': 'Premium high-fidelity wireless audio gear, noise-canceling headphones, and speakers.'
-            },
-            {
-                'name': 'Electronics & Tech',
-                'description': 'Cutting-edge gadgets, smartwatches, mechanical keyboards, and tech accessories.'
-            },
-            {
-                'name': 'Fashion & Apparel',
-                'description': 'Stylish contemporary clothing, hoodies, jackets, and modern everyday wear.'
-            },
-            {
-                'name': 'Home & Lifestyle',
-                'description': 'Minimalist home decor, smart lighting, desk accessories, and lifestyle essentials.'
-            },
-            {
-                'name': 'Footwear & Sneakers',
-                'description': 'Performance running shoes, casual sneakers, and ergonomic footwear.'
-            }
+            {'name': "Women's Fashion", 'description': "Trendy clothing, ethnic wear, and modern fashion for women."},
+            {'name': "Men's Fashion", 'description': "Smart casuals, formal shirts, jackets, and denim for men."},
+            {'name': "Kids", 'description': "Adorable and comfortable clothing for children of all ages."},
+            {'name': "Dresses", 'description': "Elegant evening gowns, casual maxi dresses, and party wear."},
+            {'name': "Tops", 'description': "Stylish blouses, t-shirts, crop tops, and tunic tops."},
+            {'name': "Jeans", 'description': "Slim-fit, high-rise, and relaxed denim jeans."},
+            {'name': "Sarees", 'description': "Handcrafted silk, chiffon, and designer sarees for occasions."},
+            {'name': "Kurtis", 'description': "Traditional and contemporary ethnic kurtis and tunic dresses."},
+            {'name': "Footwear", 'description': "Trendy sneakers, leather loafers, elegant heels, and sandals."},
+            {'name': "Handbags", 'description': "Chic shoulder bags, luxury totes, clutches, and crossbody bags."},
+            {'name': "Jewellery", 'description': "Gold-plated necklaces, crystal earrings, and fine fashion jewellery."},
+            {'name': "Accessories", 'description': "Polarized sunglasses, luxury wristwatches, and genuine leather wallets."}
         ]
 
         category_objs = {}
         for cat in categories_data:
             obj, created = Category.objects.get_or_create(
-                name=cat['name'],
+                slug=slugify(cat['name']),
                 defaults={
-                    'slug': slugify(cat['name']),
+                    'name': cat['name'],
                     'description': cat['description']
                 }
             )
             category_objs[cat['name']] = obj
 
-        # 3. Sample Products
+        # 3. Fashion Products Data
         products_data = [
+            # Women's & Dresses & Kurtis
             {
-                'category': category_objs['Audio & Headphones'],
-                'name': 'AeroSound Pro Wireless ANC Headphones',
-                'price': 199.99,
+                'category': category_objs['Dresses'],
+                'name': 'Floral Breeze Summer Maxi Dress',
+                'price': 49.99,
+                'original_price': 89.99,
                 'stock': 25,
                 'rating': 4.8,
-                'image_url': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80',
-                'description': 'Experience studio-quality audio with industry-leading Active Noise Cancellation (ANC). Features 40-hour battery life, ultra-soft memory foam earcups, and dual multi-point Bluetooth connection.'
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=800&q=80',
+                'description': 'A breathable, elegant floral maxi dress crafted from premium lightweight chiffon. Perfect for summer brunches, beach outings, and garden parties.'
             },
             {
-                'category': category_objs['Audio & Headphones'],
-                'name': 'Pulse Mini Portable Bluetooth Speaker',
-                'price': 49.50,
-                'stock': 40,
-                'rating': 4.5,
-                'image_url': 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=800&q=80',
-                'description': 'Compact IPX7 waterproof Bluetooth speaker delivering punchy 360-degree sound. Ideal for outdoor adventures, poolside parties, or home desk listening.'
-            },
-            {
-                'category': category_objs['Electronics & Tech'],
-                'name': 'ChronoFit Pro Smartwatch',
-                'price': 149.00,
-                'stock': 18,
+                'category': category_objs['Kurtis'],
+                'name': 'Hand-Block Printed Cotton Kurti',
+                'price': 29.99,
+                'original_price': 49.99,
+                'stock': 30,
                 'rating': 4.7,
-                'image_url': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
-                'description': 'Sleek AMOLED smartwatch with continuous heart rate monitoring, GPS tracking, sleep analytics, and over 50 workout modes. Water resistant up to 50 meters.'
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=800&q=80',
+                'description': 'Traditional hand-block printed pure cotton kurti featuring delicate embroidery on the neckline and a comfortable straight fit.'
             },
             {
-                'category': category_objs['Electronics & Tech'],
-                'name': 'KeyCraft RGB Mechanical Keyboard',
-                'price': 119.99,
+                'category': category_objs['Sarees'],
+                'name': 'Royal Banarasi Silk Designer Saree',
+                'price': 79.99,
+                'original_price': 149.99,
+                'stock': 15,
+                'rating': 4.9,
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
+                'description': 'Luxurious Banarasi silk saree adorned with intricate gold zari weave. Comes with an unstitched matching blouse piece.'
+            },
+            {
+                'category': category_objs['Jeans'],
+                'name': 'High-Waisted Slim Fit Denim Jeans',
+                'price': 39.99,
+                'original_price': 69.99,
+                'stock': 20,
+                'rating': 4.6,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80',
+                'description': 'Flattering high-rise denim jeans with optimal stretch and durable double-stitched seams. Essential wardrobe staple.'
+            },
+
+            # Men's Fashion
+            {
+                'category': category_objs["Men's Fashion"],
+                'name': 'Men\'s Casual Linen Button-Down Shirt',
+                'price': 34.99,
+                'original_price': 59.99,
+                'stock': 35,
+                'rating': 4.6,
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80',
+                'description': 'Airy 100% organic linen casual shirt featuring a spread collar and chest pocket. Tailored for effortless summer style.'
+            },
+            {
+                'category': category_objs["Men's Fashion"],
+                'name': 'Men\'s Slim Fit Stretch Denim Jeans',
+                'price': 44.99,
+                'original_price': 79.99,
+                'stock': 22,
+                'rating': 4.7,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1542272604-780c96856552?auto=format&fit=crop&w=800&q=80',
+                'description': 'Modern slim-fit jeans constructed from premium indigo denim with comfort-stretch technology for all-day mobility.'
+            },
+            {
+                'category': category_objs["Men's Fashion"],
+                'name': 'Classic Oxford Cotton Formal Shirt',
+                'price': 39.99,
+                'original_price': 69.99,
+                'stock': 18,
+                'rating': 4.8,
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80',
+                'description': 'Crisp Oxford cotton formal shirt designed with a button-down collar and wrinkle-resistant fabric. Ideal for business and formal wear.'
+            },
+            {
+                'category': category_objs['Tops'],
+                'name': 'Essential Organic Cotton Crewneck T-Shirt',
+                'price': 19.99,
+                'original_price': 34.99,
+                'stock': 50,
+                'rating': 4.5,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80',
+                'description': 'Ultra-soft combed organic cotton t-shirt with a pre-shrunk fit and durable ribbed crew collar.'
+            },
+
+            # Handbags & Accessories
+            {
+                'category': category_objs['Handbags'],
+                'name': 'Elegance Genuine Leather Shoulder Handbag',
+                'price': 54.99,
+                'original_price': 99.99,
                 'stock': 12,
                 'rating': 4.9,
-                'image_url': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80',
-                'description': 'Customizable 75% hot-swappable mechanical keyboard equipped with linear tactile switches, per-key RGB backlight, and durable PBT keycaps.'
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
+                'description': 'Spacious handcrafted leather tote handbag with multi-zip compartments and detachable shoulder strap.'
             },
             {
-                'category': category_objs['Electronics & Tech'],
-                'name': 'Ergonomic Precision Wireless Mouse',
-                'price': 39.99,
-                'stock': 30,
-                'rating': 4.6,
-                'image_url': 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&q=80',
-                'description': 'Sculpted ergonomic design reduces wrist strain during extended work hours. Multi-device switching with hyper-fast scrolling wheel.'
-            },
-            {
-                'category': category_objs['Fashion & Apparel'],
-                'name': 'Urban Minimalist Fleece Hoodie',
-                'price': 65.00,
-                'stock': 35,
-                'rating': 4.4,
-                'image_url': 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
-                'description': 'Premium organic heavy cotton hoodie featuring a tailored relaxed fit, double-lined hood, and kangaroo front pocket. Exceptionally warm and soft.'
-            },
-            {
-                'category': category_objs['Fashion & Apparel'],
-                'name': 'Classic Denim Trucker Jacket',
-                'price': 89.95,
-                'stock': 15,
-                'rating': 4.6,
-                'image_url': 'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=800&q=80',
-                'description': 'Timeless vintage wash denim jacket made from 100% durable cotton denim. Button front closure with dual chest flap pockets.'
-            },
-            {
-                'category': category_objs['Home & Lifestyle'],
-                'name': 'Minimalist Ceramic Desk Lamp',
-                'price': 55.00,
-                'stock': 20,
-                'rating': 4.8,
-                'image_url': 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
-                'description': 'Scandinavian inspired dimmable LED ceramic desk lamp with warm tone illumination. Adds clean aesthetic charm to any study or bedroom workspace.'
-            },
-            {
-                'category': category_objs['Home & Lifestyle'],
-                'name': 'Insulated Stainless Steel Water Bottle',
-                'price': 28.50,
-                'stock': 50,
-                'rating': 4.9,
-                'image_url': 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=800&q=80',
-                'description': 'Double-wall vacuum insulated flask keeps beverages icy cold for 24 hours or piping hot for 12 hours. BPA-free leak-proof lid.'
-            },
-            {
-                'category': category_objs['Footwear & Sneakers'],
-                'name': 'CloudStride Nitro Running Shoes',
-                'price': 129.99,
-                'stock': 8,
+                'category': category_objs['Accessories'],
+                'name': 'Polarized UV400 Classic Aviator Sunglasses',
+                'price': 29.99,
+                'original_price': 59.99,
+                'stock': 40,
                 'rating': 4.7,
-                'image_url': 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80',
-                'description': 'High-performance neutral running shoes with responsive nitrogen-infused foam cushioning and breathable engineered mesh upper.'
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=800&q=80',
+                'description': 'Lightweight metal frame aviator sunglasses featuring HD glare-blocking polarized lenses with full UV400 protection.'
             },
             {
-                'category': category_objs['Footwear & Sneakers'],
-                'name': 'Classic Canvas Retro Sneakers',
-                'price': 59.95,
-                'stock': 22,
-                'rating': 4.3,
-                'image_url': 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=800&q=80',
-                'description': 'Versatile low-top canvas sneakers featuring vulcanized rubber soles and padded insoles for all-day comfort.'
+                'category': category_objs['Accessories'],
+                'name': 'Minimalist Steel Chronograph Wrist Watch',
+                'price': 79.99,
+                'original_price': 149.99,
+                'stock': 15,
+                'rating': 4.8,
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80',
+                'description': 'Sleek stainless steel wrist watch with Japanese quartz movement, scratch-resistant sapphire glass, and 30m water resistance.'
+            },
+
+            # Footwear
+            {
+                'category': category_objs['Footwear'],
+                'name': 'Minimalist Urban White Sneakers',
+                'price': 49.99,
+                'original_price': 89.99,
+                'stock': 28,
+                'rating': 4.7,
+                'is_featured': True,
+                'image_url': 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=800&q=80',
+                'description': 'Versatile low-top leather sneakers with cushioned insoles and durable anti-slip rubber outsole.'
+            },
+            {
+                'category': category_objs['Footwear'],
+                'name': 'Women\'s Elegant Strap Heel Sandals',
+                'price': 59.99,
+                'original_price': 109.99,
+                'stock': 14,
+                'rating': 4.6,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80',
+                'description': 'Chic ankle strap high heels designed for evening wear and special celebrations.'
+            },
+
+            # Jewellery
+            {
+                'category': category_objs['Jewellery'],
+                'name': 'Gold Plated Minimalist Pendant Necklace',
+                'price': 24.99,
+                'original_price': 49.99,
+                'stock': 30,
+                'rating': 4.8,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+                'description': '18k gold plated dainty pendant necklace crafted from hypoallergenic brass.'
+            },
+            {
+                'category': category_objs['Jewellery'],
+                'name': 'Crystal Chandelier Drop Earrings',
+                'price': 18.99,
+                'original_price': 34.99,
+                'stock': 25,
+                'rating': 4.5,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80',
+                'description': 'Sparkling cubic zirconia crystal earrings for weddings and evening galas.'
+            },
+
+            # Kids
+            {
+                'category': category_objs['Kids'],
+                'name': 'Kids Printed Cotton Outfit Set',
+                'price': 22.99,
+                'original_price': 39.99,
+                'stock': 35,
+                'rating': 4.6,
+                'is_featured': False,
+                'image_url': 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=800&q=80',
+                'description': 'Soft and breathable 100% cotton printed shirt and shorts combo set for kids.'
             }
         ]
 
+        # Clean existing non-fashion products if re-seeding
+        Product.objects.all().delete()
+
         for p_data in products_data:
             slug = slugify(p_data['name'])
-            Product.objects.update_or_create(
+            Product.objects.create(
+                category=p_data['category'],
+                name=p_data['name'],
                 slug=slug,
-                defaults={
-                    'category': p_data['category'],
-                    'name': p_data['name'],
-                    'price': p_data['price'],
-                    'stock': p_data['stock'],
-                    'rating': p_data['rating'],
-                    'image_url': p_data['image_url'],
-                    'description': p_data['description']
-                }
+                price=p_data['price'],
+                original_price=p_data['original_price'],
+                stock=p_data['stock'],
+                rating=p_data['rating'],
+                is_featured=p_data['is_featured'],
+                image_url=p_data['image_url'],
+                description=p_data['description']
             )
 
-        self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(products_data)} products across {len(categories_data)} categories!'))
+        self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(products_data)} fashion products across {len(categories_data)} categories!'))

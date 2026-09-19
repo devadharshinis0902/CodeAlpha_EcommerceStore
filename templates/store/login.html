@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Sign In | CodeAlpha Store{% endblock %}
+{% block title %}Sign In | Fashion Store{% endblock %}
 
 {% block content %}
 
     <div class="auth-card">
         <h1 class="auth-title">Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to your CodeAlpha Store account to continue.</p>
+        <p class="auth-subtitle">Sign in to your Fashion Store account to continue.</p>
+
 
         <form method="POST" action="{% url 'login' %}{% if next %}?next={{ next }}{% endif %}">
             {% csrf_token %}

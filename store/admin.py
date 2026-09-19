@@ -1,6 +1,10 @@
 from django.contrib import admin
 from .models import Category, Product, Order, OrderItem
 
+admin.site.site_header = "Fashion Store Admin Portal"
+admin.site.site_title = "Fashion Store Management"
+admin.site.index_title = "Manage Catalog, Orders & Inventory"
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -11,9 +15,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price', 'stock', 'rating', 'created_at']
-    list_filter = ['category', 'stock']
-    list_editable = ['price', 'stock']
+    list_display = ['name', 'category', 'price', 'original_price', 'stock', 'rating', 'is_featured', 'created_at']
+    list_filter = ['category', 'is_featured', 'stock']
+    list_editable = ['price', 'original_price', 'stock', 'is_featured']
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name', 'description']
 
